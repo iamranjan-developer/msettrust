@@ -44,21 +44,32 @@ a:hover {
   width: min(1200px, 92%);
   margin: 0 auto;
 }
-.topbar {
-  background: #ff7a00;
-  color: #fdeeea;
-  font-size: 0.85rem;
-}
-.topbar .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.45rem 0;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-.topbar a {
-  color: #fff;
+/* ===== TOPBAR ===== */
+.topbar { background: #ff7a00; color: #fff; font-size: 14px; padding: 8px 0; }
+.topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+.tb-contact { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.tb-link { display: inline-flex; align-items: center; gap: 6px; color: #fff; text-decoration: none; font-weight: 500; transition: opacity .2s; }
+.tb-link:hover { opacity: .85; }
+.tb-ico { width: 16px; height: 16px; color: #fff; flex-shrink: 0; }
+
+.tb-socials { display: flex; align-items: center; gap: 8px; }
+.tb-social { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: #fff; color: #ff7a00; text-decoration: none; transition: all .25s ease; box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+.tb-social svg { width: 16px; height: 16px; }
+.tb-social:hover { transform: translateY(-3px) scale(1.1); box-shadow: 0 6px 12px rgba(0,0,0,.25); color: #fff; }
+.tb-social[aria-label="Facebook"]:hover  { background: #1877f2; }
+.tb-social[aria-label="WhatsApp"]:hover  { background: #25d366; }
+.tb-social[aria-label="YouTube"]:hover   { background: #ff0000; }
+.tb-social[aria-label="Instagram"]:hover { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+.tb-social[aria-label="Twitter"]:hover   { background: #000; }
+.tb-social[aria-label="LinkedIn"]:hover  { background: #0a66c2; }
+
+@media (max-width: 768px) {
+  .topbar-inner { justify-content: center; }
+  .tb-contact { justify-content: center; gap: 12px; }
+  .tb-link span { display: none; }
+  .tb-ico { width: 18px; height: 18px; }
+  .tb-socials { justify-content: center; }
 }
 .btn {
   display: inline-block;
