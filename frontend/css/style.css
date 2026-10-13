@@ -93,6 +93,22 @@ footer a:hover{color:#fff}
 .marquee span{display:inline-block;padding:0 2rem;animation:slide 18s linear infinite}
 @keyframes slide{to{transform:translateX(-50%)}}
 .whatsapp{position:fixed;right:18px;bottom:18px;background:#25D366;color:#fff;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:1.6rem;box-shadow:var(--shadow);z-index:60;text-decoration:none}
+/* MSET shared layout additions — pure CSS, same colors/fonts. No framework. */
+.nav-more{font:inherit;font-weight:600;color:var(--dark);border:1.5px solid #d7e2ef;border-radius:10px;padding:.45rem .6rem;background:#fff;cursor:pointer;max-width:130px}
+.nav-more:focus{outline:none;border-color:var(--primary)}
+.page-hero{background:linear-gradient(180deg,#eef5ff 0%,#fff 100%);padding:3rem 0 2.2rem;border-bottom:1px solid #e6edf5}
+.page-hero h1{margin:.4rem 0 .6rem}
+.list{display:grid;gap:1rem;margin-top:1.2rem}
+.list-item{background:#fff;border:1px solid #e6edf5;border-radius:var(--radius);padding:1.2rem 1.3rem;box-shadow:0 6px 18px rgba(16,42,67,.06)}
+.list-item h3{margin:.2rem 0 .4rem}
+.list-meta{font-size:.85rem;color:var(--muted);margin-bottom:.5rem}
+.toolbar{display:flex;gap:.6rem;flex-wrap:wrap;margin:1.2rem 0}
+.toolbar input[type="search"]{max-width:280px}
+.state{padding:1.2rem;border:1px dashed #c4d3e5;border-radius:12px;color:var(--muted);background:#f8fbff;margin-top:1rem;text-align:center}
+.skip-link{position:absolute;left:-9999px;top:0;background:var(--primary);color:#fff;padding:.6rem 1rem;z-index:100;border-radius:0 0 10px 0}
+.skip-link:focus{left:0}
+details{background:#fff;border:1px solid #e6edf5;border-radius:12px;padding:1rem;margin-bottom:.7rem}
+details summary{cursor:pointer;font-weight:700}
 @media(max-width:950px){
 .hero-grid,.grid-3,.grid-4,.grid-2,.foot-grid{grid-template-columns:1fr 1fr}
 .trust-strip{grid-template-columns:1fr 1fr}

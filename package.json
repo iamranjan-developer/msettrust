@@ -1,0 +1,25 @@
+{
+  "name": "msettrust",
+  "version": "1.0.0",
+  "description": "Educational NGO website — pure HTML5 + CSS3 + Vanilla JS, Cloudflare Pages + D1 + R2.",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev frontend --compatibility-date=2024-12-01",
+    "deploy": "wrangler pages deploy frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamranjan-developer/msettrust.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/iamranjan-developer/msettrust/issues"
+  },
+  "homepage": "https://github.com/iamranjan-developer/msettrust#readme",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

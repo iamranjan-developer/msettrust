@@ -1,0 +1,20 @@
+# MSET — Cloudflare Pages + D1 + R2
+# Publish directory: frontend/
+# Functions directory: functions/
+
+name = "msettrust"
+compatibility_date = "2024-12-01"
+
+[site]
+bucket = "./frontend"
+
+# D1 database binding (niche placeholder — asol ID pore bosbe)
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "msettrust-db"
+# database_id = "PASTE-D1-ID-HERE"
+
+# R2 bucket binding (niche placeholder — asol naam pore bosbe)
+# [[r2_buckets]]
+# binding = "FILES"
+# bucket_name = "msettrust-files"
