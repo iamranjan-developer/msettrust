@@ -6,18 +6,14 @@
 name = "msettrust"
 compatibility_date = "2024-12-01"
 
-# --- Cloudflare Pages deploy ---
-# wrangler pages deploy frontend
-# Build command: (none — pure HTML/CSS/JS, no build)
+# --- D1 database binding ---
+[[d1_databases]]
+binding = "DB"
+database_name = "msettrust-db"
+database_id = "e7d5cace-6d40-4be7-8915-68511f5a1b5e"
+migrations_dir = "migrations"
 
-# --- D1 database binding (dashboard theke database_id bosan, tarpor uncomment) ---
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "msettrust-db"
-# database_id = "PASTE-D1-ID-HERE"
-# migrations_dir = "migrations"
-
-# --- R2 bucket binding (gallery/faculty/hero/blog-cover/documents upload ekhane) ---
-# [[r2_buckets]]
-# binding = "FILES"
-# bucket_name = "msettrust-files"
+# --- R2 bucket binding ---
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "msettrust-files"
