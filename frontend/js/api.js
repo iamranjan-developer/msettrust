@@ -41,7 +41,10 @@ function msetPosts() {
   function paint(rows) {
     if (!rows.length) { box.innerHTML = ''; msetState('post-state', 'No stories found.', false); return; }
     box.innerHTML = rows.map(function (p) {
-      return '<article class="card"><div class="card-body"><span class="tag">' + msetEsc(p.tag || 'Story') + '</span><h3>' + msetEsc(p.title_en || p.title) + '</h3><p class="meta">' + msetEsc(p.published_at || p.created_at || '') + '</p><p>' + msetEsc(String(p.body_en || p.body || '').slice(0, 140)) + '…</p></div></article>';
+      var cover = p.cover
+        ? '<img loading="lazy" src="' + msetEsc(p.cover) + '" alt="" style="width:100%;height:170px;object-fit:cover;border-radius:10px;margin-bottom:.6rem">'
+        : '';
+      return '<article class="card"><div class="card-body">' + cover + '<span class="tag">' + msetEsc(p.tag || 'Story') + '</span><h3>' + msetEsc(p.title_en || p.title) + '</h3><p class="meta">' + msetEsc(p.published_at || p.created_at || '') + '</p><p>' + msetEsc(String(p.body_en || p.body || '').slice(0, 140)) + '…</p></div></article>';
     }).join('');
     msetState('post-state', '', true);
   }
@@ -99,8 +102,113 @@ function msetDocs() {
     }));
   });
 }
+/* MSET gallery loader — admin R2 upload theke photo asbe. Backend na thakle CSS placeholder. */
+function msetGallery() {
+  var box = document.getElementById('gallery-grid');
+  if (!box) return;
+  var state = document.getElementById('gallery-state');
+  var cat = 'all';
+  function paint(rows) {
+    var list = rows.filter(function (g) { return cat === 'all' || (g.category || 'event') === cat; });
+    if (!list.length) {
+      box.innerHTML = '<div class="ph-img ph-gallery" role="img" aria-label="Photos coming soon">Photos coming soon — admin will upload from dashboard</div>';
+      if (state) { state.hidden = false; state.textContent = 'No photos in this category yet.'; }
+      return;
+    }
+    box.innerHTML = list.map(function (g) {
+      return '<figure style="margin:0"><img loading="lazy" decoding="async" data-cat="' +
+        msetEsc(g.category || 'event') + '" src="' + msetEsc(g.url) + '" alt="' +
+        msetEsc(g.title || 'MSET photo') + '" style="height:220px;width:100%;object-fit:cover;border-radius:14px">' +
+        (g.title ? '<figcaption class="meta" style="margin-top:.3rem">' + msetEsc(g.title) + '</figcaption>' : '') + '</figure>';
+    }).join('');
+    if (state) state.hidden = true;
+  }
+  document.querySelectorAll('[data-filter]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      cat = b.dataset.filter || 'all';
+      msetGallery._all = msetGallery._all || [];
+      paint(msetGallery._all);
+    });
+  });
+  msetGet('/api/gallery?limit=30').then(function (d) {
+    var rows = d.items || [];
+    msetGallery._all = rows;
+    paint(rows);
+    if (!rows.length && state) { state.hidden = false; state.textContent = 'No photos yet — admin will upload from dashboard.'; }
+  }).catch(function () {
+    msetGallery._all = [];
+    paint([]);
+  });
+}
+/* MSET faculty loader — about page #team-grid, admin R2 photo ele card e bosbe. */
+function msetFaculty() {
+  var box = document.getElementById('team-grid');
+  if (!box) return;
+  msetGet('/api/faculty?limit=20').then(function (d) {
+    var rows = d.items || [];
+    if (!rows.length) return;
+    box.innerHTML = rows.map(function (f) {
+      var ph = f.photo
+        ? '<img loading="lazy" src="' + msetEsc(f.photo) + '" alt="' + msetEsc(f.name) + '">'
+        : '<div class="ph-avatar" role="img" aria-label="' + msetEsc(f.name) + '">' + msetEsc((f.name || 'M').charAt(0)) + '</div>';
+      return '<div class="card">' + ph + '<div class="card-body"><h3>' + msetEsc(f.name) + '</h3><p class="meta">' +
+        msetEsc(f.role) + (f.bio ? '<br>' + msetEsc(f.bio) : '') + '</p></div></div>';
+    }).join('');
+  }).catch(function () {});
+}
+/* MSET hero loader — home #hero-media, admin slide thakle prothom photo bosbe. */
+function msetHero() {
+  var box = document.getElementById('hero-media');
+  if (!box) return;
+  msetGet('/api/hero?limit=5').then(function (d) {
+    var rows = d.items || [];
+    if (!rows.length) return;
+    var h = rows[0];
+    if (!h.image) return;
+    var old = box.querySelector('.ph-img, img');
+    if (old) {
+      var img = document.createElement('img');
+      img.setAttribute('fetchpriority', 'high');
+      img.setAttribute('decoding', 'async');
+      img.src = h.image;
+      img.alt = h.heading || 'MSET';
+      old.replaceWith(img);
+    }
+  }).catch(function () {});
+}
+/* MSET contact form — /api/contact (D1 messages) e pathabe, offline hole demo msg. */
+function msetContact() {
+  var f = document.getElementById('contact-form');
+  if (!f) return;
+  f.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var data = {
+      name: (f.querySelector('[name=name]') || {}).value || '',
+      mobile: (f.querySelector('[name=mobile]') || {}).value || '',
+      subject: (f.querySelector('[name=subject]') || {}).value || '',
+      message: (f.querySelector('[name=message]') || {}).value || '',
+    };
+    fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+      .then(function (r) { return r.json(); })
+      .then(function () { contactOk(); })
+      .catch(function () { contactOk(); });
+    function contactOk() {
+      var msg = f.querySelector('.form-msg') || document.createElement('div');
+      msg.className = 'alert form-msg';
+      msg.style.marginTop = '1rem';
+      msg.textContent = 'Thank you! Your message has been received. Our team will contact you within 24-48 hours. — Modern Skill Educational Trust';
+      f.appendChild(msg);
+      f.reset();
+      msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+}
 document.addEventListener('DOMContentLoaded', function () {
   try { msetNotices(); } catch (e) {}
   try { msetPosts(); } catch (e) {}
   try { msetDocs(); } catch (e) {}
+  try { msetGallery(); } catch (e) {}
+  try { msetFaculty(); } catch (e) {}
+  try { msetHero(); } catch (e) {}
+  try { msetContact(); } catch (e) {}
 });

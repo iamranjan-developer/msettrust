@@ -1,31 +1,27 @@
-﻿# Cloudflare Pages publish folder frontend/ deploy hobe
-# Dependencies
+# MSET
+
+# deps
 node_modules/
 package-lock.json
 
-# Cloudflare local dev
+# wrangler local
 .wrangler/
 .dev.vars
 .wrangler-state/
-
-# D1 local state
 .mf/
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
 
-# OS Editor
+# OS / Editor
 .DS_Store
 Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
 
-# Logs
+# logs + secrets
 *.log
 npm-debug.log*
-
-# Secrets kokhono commit korben na
 .env
 .env.*
-

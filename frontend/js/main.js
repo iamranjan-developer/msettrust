@@ -1,8 +1,5 @@
-// MSET - interactions
+// MSET - interactions (header/footer/layout.js theke ashe — ekhane shudhu page-level kaaj)
 document.addEventListener('DOMContentLoaded',()=>{
-  const y=document.getElementById('year'); if(y) y.textContent=new Date().getFullYear();
-  const btn=document.getElementById('hamburger'); const links=document.getElementById('navLinks');
-  if(btn&&links) btn.addEventListener('click',()=>links.classList.toggle('open'));
   // counters
   const counters=document.querySelectorAll('[data-count]');
   const io=new IntersectionObserver(es=>es.forEach(e=>{
@@ -11,8 +8,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     const t=setInterval(()=>{cur+=step; if(cur>=target){cur=target;clearInterval(t)} el.textContent=cur.toLocaleString('en-IN')+(el.dataset.suffix||'')},20);
   }),{threshold:.4});
   counters.forEach(c=>io.observe(c));
-  // forms fake submit
+  // forms fake submit (contact form bad e — or nijer submit api.js theke hoy)
   document.querySelectorAll('form[data-demo]').forEach(f=>{
+    if(f.id==='contact-form') return;
     f.addEventListener('submit',ev=>{ev.preventDefault();
       const msg=f.querySelector('.form-msg')||document.createElement('div');
       msg.className='alert form-msg'; msg.style.marginTop='1rem';

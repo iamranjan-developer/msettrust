@@ -5,7 +5,7 @@
   --secondary:#0bb386; --dark:#102a43;
   --muted:#5b6b7f; --light:#f4f7fb; --white:#fff;
   --radius:14px; --shadow:0 10px 30px rgba(16,42,67,.12);
-  --font:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  --font:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -109,6 +109,22 @@ footer a:hover{color:#fff}
 .skip-link:focus{left:0}
 details{background:#fff;border:1px solid #e6edf5;border-radius:12px;padding:1rem;margin-bottom:.7rem}
 details summary{cursor:pointer;font-weight:700}
+/* MSET photo placeholders — same size/shape as old photos. Admin R2 photo ele JS replace korbe.
+   Logo ekhane nei — logo sudhu frontend/assets/logo.svg (local core file). */
+.ph-img{display:grid;place-items:center;text-align:center;color:#fff;font-weight:800;padding:2rem 1.5rem;border-radius:14px;min-height:190px;background:linear-gradient(135deg,var(--primary),#134e7a 60%,#0bb386)}
+.card .ph-img{border-radius:0;min-height:190px}
+.hero-card .ph-img{border-radius:0;min-height:320px;font-size:1.2rem}
+.ph-hero{min-height:320px;font-size:1.2rem}
+.ph-gallery{min-height:220px;grid-column:1/-1}
+.ph-about{min-height:260px;border-radius:20px;box-shadow:0 10px 30px rgba(16,42,67,.12)}
+.ph-edu{background:linear-gradient(135deg,#0f4c81,#134e7a)}
+.ph-skill{background:linear-gradient(135deg,#0bb386,#0a7a5a)}
+.ph-welfare{background:linear-gradient(135deg,#ff7a00,#e66a00)}
+.ph-avatar{display:grid;place-items:center;height:190px;font-size:3rem;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--primary),var(--secondary))}
+.ph-t1{background:linear-gradient(135deg,#123f63,#0f4c81)}
+.ph-t2{background:linear-gradient(135deg,#0bb386,#0a7a5a)}
+.ph-t3{background:linear-gradient(135deg,#ff7a00,#e66a00)}
+.ph-t4{background:linear-gradient(135deg,#5b3df5,#3f2bb5)}
 @media(max-width:950px){
 .hero-grid,.grid-3,.grid-4,.grid-2,.foot-grid{grid-template-columns:1fr 1fr}
 .trust-strip{grid-template-columns:1fr 1fr}
@@ -122,5 +138,20 @@ details summary{cursor:pointer;font-weight:700}
 .hero-grid,.grid-3,.grid-4,.grid-2,.foot-grid,.gallery{grid-template-columns:1fr}
 .row2{grid-template-columns:1fr}
 .section{padding:3rem 0}
+}
+
+/* --- dropdown nav (js/layout.js) — same font/color as nav-links, design unchanged --- */
+.nav-drop{position:relative}
+.nav-drop>button{font:inherit;font-weight:600;color:var(--dark);background:none;border:0;cursor:pointer;display:inline-flex;align-items:center;gap:.25rem;padding:.2rem 0}
+.nav-drop>button:hover,.nav-drop.active>button{color:var(--accent)}
+.nav-drop .caret{font-size:.7rem}
+.nav-drop-menu{display:none;position:absolute;top:calc(100% + .6rem);left:-.8rem;background:#fff;border:1px solid #e6edf5;border-radius:12px;box-shadow:0 12px 30px rgba(15,23,42,.12);padding:.5rem;min-width:220px;z-index:60}
+.nav-drop.open .nav-drop-menu{display:block}
+.nav-drop-menu a{display:block;padding:.5rem .7rem;border-radius:8px;color:var(--dark)}
+.nav-drop-menu a:hover,.nav-drop-menu a.active{color:var(--accent);background:#f2f7fd}
+@media(max-width:950px){
+  .nav-drop{width:100%}
+  .nav-drop>button{width:100%;text-align:left;padding:.35rem 0}
+  .nav-drop-menu{position:static;display:block;border:0;box-shadow:none;padding:.1rem 0 .3rem .9rem;min-width:0}
 }
 

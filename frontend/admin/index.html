@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin | Modern Skill Educational Trust</title>
+<meta name="description" content="MSET admin panel." />
+<link rel="icon" type="image/svg+xml" href="../assets/logo.svg" />
+<link rel="stylesheet" href="../css/style.css" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="site-header"></div>
+<main id="main">
+<section class="page-hero"><div class="container"><span class="eyebrow">Admin Only</span><h1>Dashboard</h1><p class="lead">Faculty, gallery, hero photo, notice, blog, PDF — sob ekhan theke upload hobe. File R2-te, info D1-te joma hobe. Logo local thakbe.</p></div></section>
+<section class="section"><div class="admin-wrap">
+<div id="login-panel" class="login-box">
+<form class="card-form" id="login-form"><h3>Admin Login</h3>
+<label>Username</label><input id="login-user" required autocomplete="username">
+<label>Password</label><input id="login-pass" type="password" required autocomplete="current-password">
+<button class="btn btn-primary" style="width:100%;margin-top:1rem" type="submit">Login</button>
+<p class="meta" id="login-msg" style="text-align:center"></p>
+</form>
+</div>
+<div id="dash" hidden>
+<div class="row-flex" style="align-items:center">
+<div><strong id="admin-name">Admin</strong><p class="meta">Logo change ekhan theke hobe na (logo local file).</p></div>
+<div style="flex:0"><button class="btn btn-dark" id="logout-btn" type="button">Logout</button></div>
+</div>
+<div class="tabs" role="tablist">
+<button data-tab="gallery" class="on" type="button">Gallery</button>
+<button data-tab="faculty" type="button">Faculty</button>
+<button data-tab="hero" type="button">Hero</button>
+<button data-tab="notices" type="button">Notices</button>
+<button data-tab="posts" type="button">Blog</button>
+<button data-tab="docs" type="button">Downloads</button>
+<button data-tab="inbox" type="button">Inbox</button>
+</div>
+<div id="panels"></div>
+</div>
+</div></section>
+</main>
+<div id="site-footer"></div>
+<script src="panels.js" defer></script>
+<script src="../js/layout.js" defer></script>
+<script src="../js/main.js" defer></script>
+<script src="admin.js" defer></script>
+</body>
+</html>

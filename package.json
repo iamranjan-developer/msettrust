@@ -1,24 +1,17 @@
 {
   "name": "msettrust",
   "version": "1.0.0",
-  "description": "Educational NGO website — pure HTML5 + CSS3 + Vanilla JS, Cloudflare Pages + D1 + R2.",
+  "description": "MSET — Language: JavaScript, Framework: Cloudflare Pages Functions, Database: Cloudflare D1, Storage: Cloudflare R2. Frontend: pure HTML5 + CSS3 + Vanilla JS, same design, no CDN.",
   "private": true,
   "scripts": {
     "dev": "wrangler pages dev frontend --compatibility-date=2024-12-01",
-    "deploy": "wrangler pages deploy frontend"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/iamranjan-developer/msettrust.git"
+    "deploy": "wrangler pages deploy frontend --compatibility-date=2024-12-01",
+    "db:apply": "wrangler d1 execute msettrust-db --file=migrations/0001_init.sql",
+    "admin": "node tools/make-admin.mjs"
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/iamranjan-developer/msettrust/issues"
-  },
-  "homepage": "https://github.com/iamranjan-developer/msettrust#readme",
+  "type": "module",
   "devDependencies": {
     "wrangler": "^3.0.0"
   }

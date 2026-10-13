@@ -1,20 +1,23 @@
-# MSET — Cloudflare Pages + D1 + R2
-# Publish directory: frontend/
-# Functions directory: functions/
+# MSET — Language: JavaScript | Framework: Cloudflare Pages Functions (no extra framework)
+# Database: Cloudflare D1 (binding DB) | Storage: Cloudflare R2 (binding FILES)
+# Publish directory: frontend/ | Functions directory: functions/
+# Logo local (frontend/assets/logo.svg) — R2-te upload hobe na.
 
 name = "msettrust"
 compatibility_date = "2024-12-01"
 
-[site]
-bucket = "./frontend"
+# --- Cloudflare Pages deploy ---
+# wrangler pages deploy frontend
+# Build command: (none — pure HTML/CSS/JS, no build)
 
-# D1 database binding (niche placeholder — asol ID pore bosbe)
+# --- D1 database binding (dashboard theke database_id bosan, tarpor uncomment) ---
 # [[d1_databases]]
 # binding = "DB"
 # database_name = "msettrust-db"
 # database_id = "PASTE-D1-ID-HERE"
+# migrations_dir = "migrations"
 
-# R2 bucket binding (niche placeholder — asol naam pore bosbe)
+# --- R2 bucket binding (gallery/faculty/hero/blog-cover/documents upload ekhane) ---
 # [[r2_buckets]]
 # binding = "FILES"
 # bucket_name = "msettrust-files"
