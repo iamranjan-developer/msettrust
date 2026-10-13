@@ -20,7 +20,7 @@
     return '<div class="topbar"><div class="container">' +
       '<div>Call: +91 9339266366 / +91 8001923229 | info@msettrust.org</div>' +
       '<div>Regd. NGO | 80G &amp; 12A Certified | <a href="donate.html">Donate Now</a></div></div></div>' +
-      '<header class="site"><div class="container nav"><div class="brand">' +
+      '<header class="site"><div class="container nav"><button type="button" class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">&#9776;</button><div class="brand">' +
       '<div class="logo" aria-hidden="true">M</div>' +
       '<div class="brand-text"><strong>Modern Skill Educational Trust</strong><small>Education Skills Empowerment</small></div></div>' +
       '<nav class="nav-links" id="navLinks" aria-label="Main navigation">' +
@@ -31,7 +31,7 @@
       '<div class="nav-drop" data-nav-parent="join-associate.html,join-faculty.html,join-affiliation.html"><button type="button" aria-expanded="false" aria-haspopup="true">Join Us <span class="caret" aria-hidden="true">&#9662;</span></button><div class="nav-drop-menu" role="menu"><a href="join-associate.html" data-nav="join-associate.html">Associate Member</a><a href="join-faculty.html" data-nav="join-faculty.html">Faculty Member</a><a href="join-affiliation.html" data-nav="join-affiliation.html">Apply for Affiliation</a></div></div>' +
       '<div class="nav-drop" data-nav-parent="gallery.html,video-gallery.html"><button type="button" aria-expanded="false" aria-haspopup="true">Gallery <span class="caret" aria-hidden="true">&#9662;</span></button><div class="nav-drop-menu" role="menu"><a href="gallery.html" data-nav="gallery.html">Photo Gallery</a><a href="video-gallery.html" data-nav="video-gallery.html">Video Gallery</a></div></div>' +
       '<a href="downloads.html" data-nav="downloads.html">Download</a><a href="blog.html" data-nav="blog.html">Blog</a><a href="contact.html" data-nav="contact.html">Contact</a>' +
-      '</nav><div class="nav-cta"><button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">&#9776;</button><a href="donate.html" class="btn btn-primary">Donate</a></div></div></header>' +
+      '</nav><div class="nav-cta"><a href="donate.html" class="btn btn-primary">Donate</a></div></div></header>' +
       '<div class="marquee" role="note"><span>Admissions Open 2026-27 for Free Skill Courses — computer — tailoring — beautician — electrician — spoken English — Join 12,500+ learners — 80G Receipt Available —</span></div>';
   }
 
