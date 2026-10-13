@@ -208,8 +208,8 @@ header.site {
 }
 .nav-links a.active,
 .nav-links a:hover {
-  color: var(--accent);
-  background: #f2f7fd;
+  color: var(--accent-dark);
+  background: rgba(255, 122, 0, 0.12);
 }
 .nav-cta {
   display: flex;
@@ -769,8 +769,8 @@ details summary {
 .nav-drop > button:hover,
 .nav-drop.active > button,
 .nav-drop.open > button {
-  color: var(--accent);
-  background: #f2f7fd;
+  color: var(--accent-dark);
+  background: rgba(255, 122, 0, 0.12);
 }
 .nav-drop .caret {
   font-size: 0.7rem;
@@ -809,8 +809,8 @@ details summary {
 }
 .nav-drop-menu a:hover,
 .nav-drop-menu a.active {
-  color: var(--accent);
-  background: #f2f7fd;
+  color: var(--accent-dark);
+  background: rgba(255, 122, 0, 0.12);
 }
 @media (max-width: 950px) {
   .nav-drop {
