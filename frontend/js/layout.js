@@ -12,8 +12,10 @@
 (function () {
   'use strict';
 
-  var PARTIAL_HEADER = 'partials/header.html';
-  var PARTIAL_FOOTER = 'partials/footer.html';
+  var IN_ADMIN = window.location.pathname.indexOf('/admin') !== -1;
+  var PARTIAL_HEADER = IN_ADMIN ? '../partials/header.html' : 'partials/header.html';
+  var PARTIAL_FOOTER = IN_ADMIN ? '../partials/footer.html' : 'partials/footer.html';
+  var LINK_PREFIX = IN_ADMIN ? '../' : '';
 
   /* ---------- inline fallback (only when fetch fails: file:// or missing partial) ---------- */
   function fallbackHeader() {
@@ -137,13 +139,25 @@
   }
 
   /* ---------- mount ---------- */
+  function adminFixLinks(root) {
+    if (!IN_ADMIN || !root || !root.querySelectorAll) return;
+    var els = root.querySelectorAll('a[href]');
+    for (var i = 0; i < els.length; i++) {
+      var href = els[i].getAttribute('href');
+      if (!href || href.charAt(0) === '#' || href.indexOf(':') !== -1 ||
+          href.charAt(0) === '/' || href.indexOf('../') === 0) continue;
+      if (href === 'admin/' || href === 'admin') { els[i].setAttribute('href', './'); continue; }
+      els[i].setAttribute('href', LINK_PREFIX + href);
+    }
+  }
+
   function mount() {
     var cur = currentFile();
     var h = document.getElementById('site-header');
     var f = document.getElementById('site-footer');
     var jobs = [];
-    if (h) jobs.push(loadPartial(PARTIAL_HEADER, fallbackHeader).then(function (html) { h.innerHTML = html; }));
-    if (f) jobs.push(loadPartial(PARTIAL_FOOTER, fallbackFooter).then(function (html) { f.innerHTML = html; }));
+    if (h) jobs.push(loadPartial(PARTIAL_HEADER, fallbackHeader).then(function (html) { h.innerHTML = html; adminFixLinks(h); }));
+    if (f) jobs.push(loadPartial(PARTIAL_FOOTER, fallbackFooter).then(function (html) { f.innerHTML = html; adminFixLinks(f); }));
     Promise.all(jobs).then(function () {
       markActive(cur);
       wireInteractions();
