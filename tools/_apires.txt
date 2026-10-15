@@ -1,0 +1,18 @@
+POST /api/admin/login => 405
+   body: 
+   ctype: undefined
+GET /api/admin/session => 200
+   body:  <!doctype html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Modern Skill Educational Trust | Empowering Education 
+   ctype: text/html; charset=utf-8
+GET /api/gallery => 200
+   body:  <!doctype html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Modern Skill Educational Trust | Empowering Education 
+   ctype: text/html; charset=utf-8
+GET /api/notices => 200
+   body:  <!doctype html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Modern Skill Educational Trust | Empowering Education 
+   ctype: text/html; charset=utf-8
+GET /api/hero => 200
+   body:  <!doctype html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Modern Skill Educational Trust | Empowering Education 
+   ctype: text/html; charset=utf-8
+GET /api/nonexistent-xyz-123 => 200
+   body:  <!doctype html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Modern Skill Educational Trust | Empowering Education 
+   ctype: text/html; charset=utf-8
