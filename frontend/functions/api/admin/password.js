@@ -23,7 +23,7 @@ export async function onRequestPost({ request, env }) {
     } else if (_rh) {
       ok = oldPassword === _rh;
     }
-    if (!ok) return bad('Old password vul', 401);
+    if (!ok) return bad('Old password invalid', 401);
     var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     var salt = '';
     try {

@@ -32,7 +32,7 @@ export function makeSessionId() {
 }
 
 export function sessionCookie(sid) {
-  return 'mset_session=' + encodeURIComponent(sid) + '; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000';
+  return 'mset_session=' + encodeURIComponent(sid) + '; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000';
 }
 
 export function clearSessionCookie() {

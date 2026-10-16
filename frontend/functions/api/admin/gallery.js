@@ -71,12 +71,13 @@ export async function onRequestPost({ request, env }) {
     source = SOURCE.R2;
   }
   await env.DB.prepare(
-    "INSERT INTO gallery_items (title_en, category, kind, source, url, video_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    "INSERT INTO gallery_items (title_en, category, kind, source, object_key, url, video_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
   ).bind(
     body,
     category,
     kind,
     source,
+    b.object_key || null,
     url,
     videoId,
     status

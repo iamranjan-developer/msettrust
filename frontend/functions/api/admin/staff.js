@@ -75,17 +75,15 @@ export async function onRequestPost({ request, env }) {
     if (password.length < 6) return bad('Password minimum 6 character');
     var salt = makeSalt();
     var hash = await hashPassword(password, salt);
-    var newId = makeId();
-    // Apnar D1-te id TEXT PRIMARY KEY — tai id nije banate hobe. Column jemon thakuk, ekta na ekta INSERT lagbei.
+    // D1-te id INTEGER PRIMARY KEY AUTOINCREMENT — tai id passing korte hobe na, D1 nije generate kore.
     var inserts = [
-      "INSERT INTO admins (id, username, password_hash, password_salt, name_en, role) VALUES (?, ?, ?, ?, ?, 'staff')",
-      'INSERT INTO admins (id, username, password_hash, password_salt, name_en) VALUES (?, ?, ?, ?, ?)',
+      'INSERT INTO admins (username, password_hash, password_salt, name_en, role) VALUES (?, ?, ?, ?, \'staff\')',
+      'INSERT INTO admins (username, password_hash, password_salt, name_en) VALUES (?, ?, ?, ?)',
     ];
     var lastErr = null;
     for (var k = 0; k < inserts.length; k++) {
       try {
-        if (k === 0) await db.prepare(inserts[k]).bind(newId, username, hash, salt, name).run();
-        else await db.prepare(inserts[k]).bind(newId, username, hash, salt, name).run();
+        await db.prepare(inserts[k]).bind(username, hash, salt, name).run();
         return json({ ok: true });
       } catch (e) {
         var m = String((e && e.message) || e);
