@@ -7,6 +7,7 @@
     "dev": "wrangler pages dev frontend --compatibility-date=2024-12-01",
     "deploy": "wrangler pages deploy frontend --compatibility-date=2024-12-01",
     "db:apply": "wrangler d1 execute msettrust-db --file=migrations/0001_init.sql",
+    "db:roles": "wrangler d1 execute msettrust-db --file=migrations/0002_admin_roles.sql",
     "admin": "node tools/make-admin.mjs"
   },
   "keywords": [],

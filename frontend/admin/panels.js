@@ -57,7 +57,19 @@
     '<label>Status</label><select id="d-status"><option value="published">Published</option><option value="draft">Draft</option></select>' +
     '<button class="btn btn-primary" style="margin-top:1rem" type="submit">Upload PDF</button><p class="meta" id="d-msg"></p></form>' +
     '<div class="list" id="doc-list"></div></section>' +
-    '<section class="panel" id="panel-inbox"><div class="list" id="msg-list"></div></section>';
+    '<section class="panel" id="panel-inbox"><div class="list" id="msg-list"></div></section>' +
+    '<section class="panel" id="panel-staff">' +
+    '<form class="card-form" id="staff-form"><h3>Add Staff (Main Admin only)</h3>' +
+    '<div class="row-flex"><div><label>Username *</label><input id="s-user" required placeholder="staff1"></div>' +
+    '<div><label>Name</label><input id="s-name" placeholder="Staff name"></div></div>' +
+    '<label>Password * (min 6 character)</label><input id="s-pass" type="password" required>' +
+    '<button class="btn btn-primary" style="margin-top:1rem" type="submit">Add Staff</button><p class="meta" id="s-msg"></p></form>' +
+    '<div class="list" id="staff-list"></div></section>' +
+    '<section class="panel" id="panel-password">' +
+    '<form class="card-form" id="pass-form"><h3>Change My Password</h3>' +
+    '<label>Old password *</label><input id="pw-old" type="password" required autocomplete="current-password">' +
+    '<label>New password * (min 6 character)</label><input id="pw-new" type="password" required autocomplete="new-password">' +
+    '<button class="btn btn-primary" style="margin-top:1rem" type="submit">Save Password</button><p class="meta" id="pw-msg"></p></form></section>';
   document.addEventListener('DOMContentLoaded', function () {
     var box = document.getElementById('panels');
     if (box) box.innerHTML = HTML;

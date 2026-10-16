@@ -48,15 +48,25 @@ export function getSessionId(request) {
 }
 
 // Cookie -> sessions -> admins join. expires_at number (ms) ba ISO string dui-tai support.
+// role: main_admin / staff. Jodi role column na thake (migration 0002 age), fallback main_admin.
 export async function currentAdmin(request, env) {
   try {
     var db = getDB(env);
     if (!db) return null;
     var sid = getSessionId(request);
     if (!sid) return null;
-    var row = await db.prepare(
-      'SELECT s.expires_at AS expires_at, a.id AS id, a.username AS username, a.name_en AS name_en FROM sessions s JOIN admins a ON a.id = s.admin_id WHERE s.id = ?'
-    ).bind(sid).first();
+    var row = null;
+    try {
+      row = await db.prepare(
+        'SELECT s.expires_at AS expires_at, a.id AS id, a.username AS username, a.name_en AS name_en, a.role AS role FROM sessions s JOIN admins a ON a.id = s.admin_id WHERE s.id = ?'
+      ).bind(sid).first();
+    } catch (e) {
+      // role column nei — purono DB
+      row = await db.prepare(
+        'SELECT s.expires_at AS expires_at, a.id AS id, a.username AS username, a.name_en AS name_en FROM sessions s JOIN admins a ON a.id = s.admin_id WHERE s.id = ?'
+      ).bind(sid).first();
+      if (row && !row.role) row.role = 'main_admin';
+    }
     if (!row) return null;
     var exp = row.expires_at;
     var expired = false;
@@ -70,13 +80,23 @@ export async function currentAdmin(request, env) {
       await db.prepare('DELETE FROM sessions WHERE id = ?').bind(sid).run().catch(function () {});
       return null;
     }
-    return { id: row.id, username: row.username, name_en: row.name_en };
+    var role = row.role || 'main_admin';
+    if (role !== 'main_admin' && role !== 'staff') role = 'staff';
+    return { id: row.id, username: row.username, name_en: row.name_en, role: role };
   } catch (e) { return null; }
 }
 
 export async function requireAdmin(request, env) {
   var admin = await currentAdmin(request, env);
   if (!admin) return { error: json({ ok: false, error: 'Unauthorized' }, 401) };
+  return { admin: admin };
+}
+
+// Sudhu main_admin parbe (staff management). Staff hole 403.
+export async function requireMainAdmin(request, env) {
+  var admin = await currentAdmin(request, env);
+  if (!admin) return { error: json({ ok: false, error: 'Unauthorized' }, 401) };
+  if (admin.role !== 'main_admin') return { error: json({ ok: false, error: 'Only main admin allowed' }, 403) };
   return { admin: admin };
 }
 

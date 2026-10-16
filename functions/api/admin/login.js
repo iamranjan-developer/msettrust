@@ -30,7 +30,14 @@ export async function onRequestPost({ request, env }) {
     const expires = Date.now() + 1000 * 60 * 60 * 24 * 30; // 30 din
     await db.prepare('INSERT INTO sessions (id, admin_id, expires_at) VALUES (?, ?, ?)').bind(sid, admin.id, expires).run();
 
-    return new Response(JSON.stringify({ ok: true, username: admin.username, name: admin.name_en || admin.username }), {
+    try {
+      await db.prepare("UPDATE admins SET last_login_at = datetime('now') WHERE id = ?").bind(admin.id).run().catch(() => {});
+    } catch {}
+
+    var role = admin.role || 'main_admin';
+    if (role !== 'main_admin' && role !== 'staff') role = 'staff';
+
+    return new Response(JSON.stringify({ ok: true, username: admin.username, name: admin.name_en || admin.username, role: role }), {
       headers: { 'Content-Type': 'application/json; charset=utf-8', 'Set-Cookie': sessionCookie(sid) },
     });
   } catch (e) {

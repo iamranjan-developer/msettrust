@@ -50,19 +50,27 @@
   }
 
   // ---- auth ----
+  var myRole = 'staff';
+
   async function checkMe() {
     var msg = $('login-msg');
     var lp = $('login-panel');
+    var fp = $('forgot-panel');
     var dash = $('dash');
     var d = await api('/api/admin/session');
     if (d.ok) {
+      myRole = d.role || 'staff';
       if (msg) msg.textContent = '';
       if (lp) lp.hidden = true;
+      if (fp) fp.hidden = true;
       if (dash) dash.hidden = false;
       var nm = $('admin-name');
-      if (nm) nm.textContent = d.name || d.username || 'Admin';
+      if (nm) nm.textContent = (d.name || d.username || 'Admin') + (myRole === 'main_admin' ? ' (Main Admin)' : '');
+      var ts = $('tab-staff');
+      if (ts) ts.hidden = (myRole !== 'main_admin');
       refreshAll();
     } else {
+      myRole = 'staff';
       if (lp) lp.hidden = false;
       if (dash) dash.hidden = true;
     }
@@ -344,14 +352,127 @@
 
   function refreshAll() {
     loadGallery(); loadFaculty(); loadHero(); loadNotices(); loadPosts(); loadDocs(); loadInbox();
+    loadStaff(); activateTab();
+  }
+
+  // ---- forgot (same design, email charai) ----
+  function initForgot() {
+    var link = $('forgot-link');
+    var back = $('forgot-back');
+    var lp = $('login-panel');
+    var fp = $('forgot-panel');
+    if (link) link.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (lp) lp.hidden = true;
+      if (fp) fp.hidden = false;
+    });
+    if (back) back.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (fp) fp.hidden = true;
+      if (lp) lp.hidden = false;
+    });
+  }
+
+  // ---- staff (sudhu main_admin dekhbe) ----
+  async function loadStaff() {
+    var box = $('staff-list');
+    if (!box) return;
+    if (myRole !== 'main_admin') { box.innerHTML = ''; return; }
+    var d = await api('/api/admin/staff');
+    if (!d.ok) { box.innerHTML = '<p class="meta">' + esc(d.error || 'Error') + '</p>'; return; }
+    box.innerHTML = (d.items || []).map(function (x) {
+      var role = x.role || 'staff';
+      var btns = '';
+      if (role !== 'main_admin') {
+        btns = '<button data-sreset="' + x.id + '">Reset password</button>' +
+          '<button data-sdel="' + x.id + '">Delete</button>';
+      } else {
+        btns = '<span class="meta">Main Admin (sobar upore)</span>';
+      }
+      return '<article class="list-item"><h3>' + esc(x.username || '') + '</h3><p>' +
+        esc(x.name_en || '') + ' — ' + esc(role) + '</p>' + btns + '</article>';
+    }).join('') || '<p class="meta">No staff yet.</p>';
+  }
+
+  function initStaff() {
+    try {
+      var f = $('staff-form');
+      if (f) f.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var msg = $('s-msg');
+        if (msg) msg.textContent = 'Saving...';
+        var d = await api('/api/admin/staff', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: $('s-user').value.trim(), name: $('s-name').value.trim(), password: $('s-pass').value }),
+        });
+        if (msg) msg.textContent = d.ok ? 'Staff added!' : (d.error || 'Error');
+        if (d.ok) { e.target.reset(); loadStaff(); }
+      });
+      document.addEventListener('click', async function (e) {
+        var rs = e.target.closest ? e.target.closest('[data-sreset]') : null;
+        if (rs) {
+          var np = prompt('Notun password din (min 6 character):');
+          if (!np) return;
+          var r = await api('/api/admin/staff', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: parseInt(rs.dataset.sreset, 10), password: np }) });
+          alert(r.ok ? 'Password reset hoyeche!' : (r.error || 'Error'));
+          loadStaff();
+          return;
+        }
+        var del = e.target.closest ? e.target.closest('[data-sdel]') : null;
+        if (del) {
+          if (!confirm('Ei staff-ke delete korben?')) return;
+          var x = await api('/api/admin/staff', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: parseInt(del.dataset.sdel, 10) }) });
+          if (!x.ok) alert(x.error || 'Error');
+          loadStaff();
+        }
+      });
+    } catch (e) { /* staff tab na thakleo login cholbe */ }
+  }
+
+  // ---- nijer password ----
+  function initMyPass() {
+    try {
+      var f = $('pass-form');
+      if (!f) return;
+      f.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var msg = $('pw-msg');
+        if (msg) msg.textContent = 'Saving...';
+        var d = await api('/api/admin/password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ oldPassword: $('pw-old').value, newPassword: $('pw-new').value }),
+        });
+        if (msg) msg.textContent = d.ok ? 'Password bodle geche!' : (d.error || 'Error');
+        if (d.ok) e.target.reset();
+      });
+    } catch (e) {}
+  }
+
+  function activateTab() {
+    try {
+      var on = document.querySelector('[data-tab].on');
+      var id = on ? on.dataset.tab : 'gallery';
+      if (id === 'staff' && myRole !== 'main_admin') {
+        document.querySelectorAll('[data-tab]').forEach(function (x) { x.classList.remove('on'); });
+        var g = document.querySelector('[data-tab="gallery"]');
+        if (g) g.classList.add('on');
+        id = 'gallery';
+      }
+      document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('on'); });
+      var p = $('panel-' + id);
+      if (p) p.classList.add('on');
+    } catch (e) {}
   }
 
   document.addEventListener('DOMContentLoaded', function () {
     initTabs();
     initAuth();
+    initForgot();
     try {
       preview('g-file', 'g-preview'); preview('f-file', 'f-preview'); preview('h-file', 'h-preview');
-      initGallery(); initFaculty(); initHero(); initNotice(); initPost(); initDoc(); initDelete();
+      initGallery(); initFaculty(); initHero(); initNotice(); initPost(); initDoc(); initDelete(); initStaff(); initMyPass();
     } catch (e) { /* panels load na holeo login cholbe */ }
     checkMe();
   });

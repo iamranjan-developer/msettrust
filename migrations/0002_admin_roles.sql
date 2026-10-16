@@ -1,5 +1,6 @@
 -- 0002: admin role (main_admin / staff). Main admin sobar upore, staff sudhu nijer password bodlate parbe.
 -- Logo local, design change nei. HTML5 + local CSS + Vanilla JS, no CDN/framework.
+-- NOTE: D1 Console-e ekbar chalaben. Jodi "duplicate column name: role" ase, mane agei add hoyeche — tokhon sudhu UPDATE duto chalaben.
 ALTER TABLE admins ADD COLUMN role TEXT NOT NULL DEFAULT 'staff';
 
 -- Apnar main admin (ekai thakben)

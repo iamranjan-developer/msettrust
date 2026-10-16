@@ -17,5 +17,5 @@ export async function onRequestPost({ request, env }) {
 export async function onRequestGet({ request, env }) {
   const admin = await currentAdmin(request, env);
   if (!admin) return json({ ok: false }, 401);
-  return json({ ok: true, username: admin.username, name: admin.name_en || admin.username });
+  return json({ ok: true, username: admin.username, name: admin.name_en || admin.username, role: admin.role || 'main_admin' });
 }

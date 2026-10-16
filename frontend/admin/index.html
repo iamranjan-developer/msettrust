@@ -19,6 +19,15 @@
 <label>Password</label><input id="login-pass" type="password" required autocomplete="current-password">
 <button class="btn btn-primary" style="width:100%;margin-top:1rem" type="submit">Login</button>
 <p class="meta" id="login-msg" style="text-align:center"></p>
+<p class="meta" style="text-align:center"><a href="#" id="forgot-link">Forgot username / password?</a></p>
+</form>
+</div>
+<div id="forgot-panel" class="login-box" hidden>
+<form class="card-form" id="forgot-form"><h3>Forgot Login</h3>
+<p class="meta">Staff hole apnar Main Admin-er sathe jogajog korun — Main Admin Dashboard er <b>Staff</b> tab theke apnar password reset kore dite parben.</p>
+<p class="meta">Apni Main Admin hole D1 Console theke 1 minute-e firte parben:</p>
+<p class="meta"><code>node tools/make-admin.mjs &lt;username&gt; &lt;notun-password&gt; Admin</code><br> Tarpor je SQL debe seta D1 Console-e Run korun.</p>
+<p class="meta" style="text-align:center"><a href="#" id="forgot-back">Back to login</a></p>
 </form>
 </div>
 <div id="dash" hidden>
@@ -34,6 +43,8 @@
 <button data-tab="posts" type="button">Blog</button>
 <button data-tab="docs" type="button">Downloads</button>
 <button data-tab="inbox" type="button">Inbox</button>
+<button data-tab="staff" type="button" id="tab-staff" hidden>Staff</button>
+<button data-tab="password" type="button">Password</button>
 </div>
 <div id="panels"></div>
 </div>
