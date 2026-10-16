@@ -122,16 +122,46 @@
   function initGallery() {
     $('gallery-form').addEventListener('submit', async function (e) {
       e.preventDefault();
-      var file = $('g-file').files[0];
-      if (!file) { $('g-msg').textContent = 'Choose a photo'; return; }
-      $('g-msg').textContent = 'Uploading to R2...';
-      var u = await uploadFile(file);
-      if (!u.ok) { $('g-msg').textContent = u.error || 'Upload failed'; return; }
+      var kindEl = $('g-kind');
+      var kind = kindEl ? kindEl.value : 'image';
+      var fileEl = $('g-file');
+      var file = fileEl && fileEl.files ? fileEl.files[0] : null;
+      var urlEl = $('g-url');
+      var urlVal = urlEl ? urlEl.value.trim() : '';
+      var title = urlVal || 'Gallery Item';
+      var msg = $('g-msg');
+
+      if (kind === 'image' && !file) { msg.textContent = 'Choose a photo'; return; }
+      if ((kind === 'video' || kind === 'link') && !urlVal) { msg.textContent = 'Enter a link'; return; }
+
+      msg.textContent = 'Saving...';
+      var body = {
+        title: title,
+        category: $('g-cat') ? $('g-cat').value : 'event',
+        status: $('g-status') ? $('g-status').value : 'draft',
+        kind: kind
+      };
+
+      if (kind === 'image') {
+        msg.textContent = 'Uploading to R2...';
+        var u = await uploadFile(file);
+        if (!u.ok) { msg.textContent = u.error || 'Upload failed'; return; }
+        body.object_key = u.object_key;
+      } else if (kind === 'video') {
+        body.video = urlVal;
+      } else if (kind === 'link') {
+        body.url = urlVal;
+      }
+
       var d = await api('/api/admin/gallery', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: $('g-title').value.trim(), category: $('g-cat').value, status: $('g-status').value, object_key: u.object_key }),
+        body: JSON.stringify(body),
       });
+      msg.textContent = d.ok ? 'Saved!' : (d.error || 'Error');
+      if (d.ok) { e.target.reset(); $('g-preview').hidden = true; loadGallery(); }
+    });
+  }
   // ---- faculty ----
   async function loadFaculty() {
     var box = $('faculty-list');

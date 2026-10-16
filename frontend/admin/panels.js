@@ -3,13 +3,15 @@
   'use strict';
   var HTML =
     '<section class="panel on" id="panel-gallery">' +
-    '<form class="card-form" id="gallery-form"><h3>Upload Gallery Photo</h3>' +
-    '<div class="row-flex"><div><label>Photo (max 8MB)</label><input type="file" id="g-file" accept="image/*" required></div>' +
-    '<div><label>Title</label><input id="g-title" placeholder="e.g. Computer class"></div></div>' +
-    '<div class="row-flex"><div><label>Category</label><select id="g-cat"><option value="edu">Education</option><option value="skill">Skill</option><option value="event">Events</option></select></div>' +
+    '<form class="card-form" id="gallery-form"><h3>Upload Gallery Photo / Video</h3>' +
+    '<div class="row-flex"><div><label>Photo (max 8MB)</label><input type="file" id="g-file" accept="image/*"></div>' +
+    '<div><label>Video / Photo URL</label><input id="g-url" type="text" placeholder="YouTube link OR photo URL"></div></div>' +
+    '<div class="row-flex"><div><label>Category</label><select id="g-cat"><option value="edu">Education</option><option value="skill">Skill</option><option value="event">Events</option><option value="welfare">Welfare</option><option value="training">Training</option><option value="other">Other</option></select></div>' +
+    '<div class="row-flex"><div><label>Type</label><select id="g-kind"><option value="image">Photo (upload)</option><option value="video">YouTube Video</option><option value="link">Photo Link</option></select></div>' +
     '<div><label>Status</label><select id="g-status"><option value="published">Published</option><option value="draft">Draft</option></select></div></div>' +
+    
     '<img class="preview" id="g-preview" hidden alt="preview">' +
-    '<button class="btn btn-primary" style="margin-top:1rem" type="submit">Upload to R2</button><p class="meta" id="g-msg"></p></form>' +
+    '<button class="btn btn-primary" style="margin-top:1rem" type="submit">Save</button><p class="meta" id="g-msg"></p></form>' +
     '<div class="thumbs" id="gallery-list"></div></section>' +
     '<section class="panel" id="panel-faculty">' +
     '<form class="card-form" id="faculty-form"><h3>Add Faculty / Team</h3>' +
