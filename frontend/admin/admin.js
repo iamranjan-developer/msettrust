@@ -414,7 +414,7 @@
         if (rs) {
           var np = prompt('Notun password din (min 6 character):');
           if (!np) return;
-          var r = await api('/api/admin/staff', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: parseInt(rs.dataset.sreset, 10), password: np }) });
+          var r = await api('/api/admin/staff', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: rs.dataset.sreset, password: np }) });
           alert(r.ok ? 'Password reset hoyeche!' : (r.error || 'Error'));
           loadStaff();
           return;
@@ -422,7 +422,7 @@
         var del = e.target.closest ? e.target.closest('[data-sdel]') : null;
         if (del) {
           if (!confirm('Ei staff-ke delete korben?')) return;
-          var x = await api('/api/admin/staff', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: parseInt(del.dataset.sdel, 10) }) });
+          var x = await api('/api/admin/staff', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: del.dataset.sdel }) });
           if (!x.ok) alert(x.error || 'Error');
           loadStaff();
         }

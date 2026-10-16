@@ -18,20 +18,44 @@ function makeSalt() {
   return out;
 }
 
+function makeId() {
+  var chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  var r = '';
+  try {
+    var a = new Uint8Array(8);
+    crypto.getRandomValues(a);
+    for (var i = 0; i < 8; i++) r += chars[a[i] % chars.length];
+  } catch (e) {
+    for (var j = 0; j < 8; j++) r += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return 'staff_' + Date.now().toString(36) + '_' + r;
+}
+
 export async function onRequestGet({ request, env }) {
   var chk = await requireMainAdmin(request, env);
   if (chk.error) return chk.error;
   var db = getDB(env);
   if (!db) return json({ ok: false, error: 'DB binding missing' }, 500);
   try {
-    var rows;
-    try {
-      rows = await db.prepare('SELECT id, username, name_en, role, created_at, last_login_at FROM admins ORDER BY id ASC').all();
-    } catch (e) {
-      rows = await db.prepare('SELECT id, username, name_en, created_at, last_login_at FROM admins ORDER BY id ASC').all();
-      rows.results = (rows.results || []).map(function (r) { r.role = 'main_admin'; return r; });
+    // Apnar D1-te created_at/last_login_at/role nao thakte pare — tai choto theke choto query-te nambo.
+    var tries = [
+      'SELECT id, username, name_en, role, created_at, last_login_at FROM admins ORDER BY username ASC',
+      'SELECT id, username, name_en, role FROM admins ORDER BY username ASC',
+      'SELECT id, username, name_en FROM admins ORDER BY username ASC',
+      'SELECT id, username FROM admins ORDER BY username ASC',
+    ];
+    var lastErr = null;
+    for (var t = 0; t < tries.length; t++) {
+      try {
+        var rr = await db.prepare(tries[t]).all();
+        var items = (rr.results || []).map(function (x) {
+          if (!x.role) x.role = 'main_admin';
+          return x;
+        });
+        return json({ ok: true, items: items });
+      } catch (e) { lastErr = e; }
     }
-    return json({ ok: true, items: rows.results || [] });
+    throw lastErr;
   } catch (e) {
     return json({ ok: false, error: String((e && e.message) || e) }, 500);
   }
@@ -51,15 +75,25 @@ export async function onRequestPost({ request, env }) {
     if (password.length < 6) return bad('Password minimum 6 character');
     var salt = makeSalt();
     var hash = await hashPassword(password, salt);
-    try {
-      await db.prepare("INSERT INTO admins (username, password_hash, password_salt, name_en, role) VALUES (?, ?, ?, ?, 'staff')").bind(username, hash, salt, name).run();
-    } catch (e) {
-      var msg = String((e && e.message) || e);
-      if (msg.indexOf('UNIQUE') !== -1 || msg.indexOf('unique') !== -1) return bad('Ei username agei ache');
-      // role column nei — purono DB: role charai staff banan
-      await db.prepare('INSERT INTO admins (username, password_hash, password_salt, name_en) VALUES (?, ?, ?, ?)').bind(username, hash, salt, name).run();
+    var newId = makeId();
+    // Apnar D1-te id TEXT PRIMARY KEY — tai id nije banate hobe. Column jemon thakuk, ekta na ekta INSERT lagbei.
+    var inserts = [
+      "INSERT INTO admins (id, username, password_hash, password_salt, name_en, role) VALUES (?, ?, ?, ?, ?, 'staff')",
+      'INSERT INTO admins (id, username, password_hash, password_salt, name_en) VALUES (?, ?, ?, ?, ?)',
+    ];
+    var lastErr = null;
+    for (var k = 0; k < inserts.length; k++) {
+      try {
+        if (k === 0) await db.prepare(inserts[k]).bind(newId, username, hash, salt, name).run();
+        else await db.prepare(inserts[k]).bind(newId, username, hash, salt, name).run();
+        return json({ ok: true });
+      } catch (e) {
+        var m = String((e && e.message) || e);
+        if (m.indexOf('UNIQUE') !== -1 || m.indexOf('unique') !== -1) return bad('Ei username agei ache');
+        lastErr = e;
+      }
     }
-    return json({ ok: true });
+    throw lastErr;
   } catch (e) {
     return json({ ok: false, error: String((e && e.message) || e) }, 500);
   }
@@ -77,10 +111,9 @@ export async function onRequestPut({ request, env }) {
     if ((id === undefined || id === null || id === '') || !password) return bad('Staff id and new password required');
     if (password.length < 6) return bad('Password minimum 6 character');
     var target = null;
-    try {
-      target = await db.prepare('SELECT id, role FROM admins WHERE id = ?').bind(id).first();
-    } catch (e) {
-      target = await db.prepare('SELECT id FROM admins WHERE id = ?').bind(id).first();
+    var selTries = ['SELECT id, role FROM admins WHERE id = ?', 'SELECT id FROM admins WHERE id = ?'];
+    for (var q = 0; q < selTries.length; q++) {
+      try { target = await db.prepare(selTries[q]).bind(id).first(); if (target) break; } catch (e) {}
     }
     if (!target) return bad('Staff not found');
     var _tr = String(target.role == null ? '' : target.role).toLowerCase().trim();
@@ -108,10 +141,9 @@ export async function onRequestDelete({ request, env }) {
     if (id === undefined || id === null || id === '') return bad('Staff id required');
     if (String(id) === String(chk.admin.id)) return bad('Nije nije-ke delete kora jabe na', 403);
     var target = null;
-    try {
-      target = await db.prepare('SELECT id, role FROM admins WHERE id = ?').bind(id).first();
-    } catch (e) {
-      target = await db.prepare('SELECT id FROM admins WHERE id = ?').bind(id).first();
+    var delTries = ['SELECT id, role FROM admins WHERE id = ?', 'SELECT id FROM admins WHERE id = ?'];
+    for (var dq = 0; dq < delTries.length; dq++) {
+      try { target = await db.prepare(delTries[dq]).bind(id).first(); if (target) break; } catch (e) {}
     }
     if (!target) return bad('Staff not found');
     var _dr = String(target.role == null ? '' : target.role).toLowerCase().trim();
