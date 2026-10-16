@@ -1,11 +1,12 @@
 // GET /api/gallery?category=edu&limit=30 — admin upload (R2) list, published only.
+// Table: gallery_items (id, title_en, category, kind, object_key, url, status, created_at).
 import { json, pageArgs, qs, fileUrl } from './_lib.js';
 
 export async function onRequestGet({ request, env }) {
   try {
     const { limit, offset } = pageArgs(request.url);
     const category = qs(request.url, 'category', '').trim();
-    let sql = "SELECT id, title_en, category, kind, object_key, url, published_at, created_at FROM gallery_items WHERE status = 'published'";
+    let sql = "SELECT id, title_en, category, kind, object_key, url, created_at FROM gallery_items WHERE status = 'published'";
     const params = [];
     if (category && category !== 'all') {
       sql += ' AND category = ?';
@@ -20,7 +21,7 @@ export async function onRequestGet({ request, env }) {
       category: g.category || 'event',
       kind: g.kind || 'image',
       url: g.url || fileUrl(g.object_key),
-      published_at: g.published_at || g.created_at || '',
+      published_at: g.created_at || '',
     }));
     return json({ ok: true, items });
   } catch (e) {

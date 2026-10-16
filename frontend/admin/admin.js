@@ -51,35 +51,47 @@
 
   // ---- auth ----
   async function checkMe() {
+    var msg = $('login-msg');
+    var lp = $('login-panel');
+    var dash = $('dash');
     var d = await api('/api/admin/session');
     if (d.ok) {
-      $('login-panel').hidden = true;
-      $('dash').hidden = false;
-      $('admin-name').textContent = d.name || d.username || 'Admin';
+      if (msg) msg.textContent = '';
+      if (lp) lp.hidden = true;
+      if (dash) dash.hidden = false;
+      var nm = $('admin-name');
+      if (nm) nm.textContent = d.name || d.username || 'Admin';
       refreshAll();
     } else {
-      $('login-panel').hidden = false;
-      $('dash').hidden = true;
+      if (lp) lp.hidden = false;
+      if (dash) dash.hidden = true;
     }
   }
 
   function initAuth() {
-    $('login-form').addEventListener('submit', async function (e) {
+    var form = $('login-form');
+    if (!form) return;
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
-      $('login-msg').textContent = 'Logging in...';
+      var msg = $('login-msg');
+      var userEl = $('login-user');
+      var passEl = $('login-pass');
+      if (msg) msg.textContent = 'Logging in...';
       var d = await api('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: $('login-user').value.trim(), password: $('login-pass').value }),
+        body: JSON.stringify({ username: userEl ? userEl.value.trim() : '', password: passEl ? passEl.value : '' }),
       });
       if (d.ok) {
-        $('login-msg').textContent = '';
+        if (msg) msg.textContent = '';
+        if (passEl) passEl.value = '';
         checkMe();
       } else {
-        $('login-msg').textContent = d.error || 'Login failed';
+        if (msg) msg.textContent = d.error || 'Login failed';
       }
     });
-    $('logout-btn').addEventListener('click', async function () {
+    var out = $('logout-btn');
+    if (out) out.addEventListener('click', async function () {
       await api('/api/admin/session', { method: 'POST' });
       location.reload();
     });
@@ -335,9 +347,12 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    initTabs(); initAuth();
-    preview('g-file', 'g-preview'); preview('f-file', 'f-preview'); preview('h-file', 'h-preview');
-    initGallery(); initFaculty(); initHero(); initNotice(); initPost(); initDoc(); initDelete();
+    initTabs();
+    initAuth();
+    try {
+      preview('g-file', 'g-preview'); preview('f-file', 'f-preview'); preview('h-file', 'h-preview');
+      initGallery(); initFaculty(); initHero(); initNotice(); initPost(); initDoc(); initDelete();
+    } catch (e) { /* panels load na holeo login cholbe */ }
     checkMe();
   });
 })();

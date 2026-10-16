@@ -1,4 +1,4 @@
-// POST /api/admin/logout + GET /api/admin/me
+// GET /api/admin/session — login check. POST /api/admin/session — logout. Design change nei.
 import { json, currentAdmin, clearSessionCookie } from '../_lib.js';
 
 export async function onRequestPost({ request, env }) {
