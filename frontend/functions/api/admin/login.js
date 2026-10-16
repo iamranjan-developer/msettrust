@@ -17,12 +17,13 @@ export async function onRequestPost({ request, env }) {
     if (!admin) return json({ ok: false, error: 'Invalid username or password' }, 401);
 
     let ok = false;
-    if (admin.password_salt) {
-      ok = (await hashPassword(password, admin.password_salt)) === admin.password_hash;
-    } else if (admin.salt) {
-      ok = (await hashPassword(password, admin.salt)) === admin.password_hash;
-    } else {
-      ok = password === admin.password_hash; // purono plain password support
+    // D1-te column naam jai hok: password_hash/hash/pass, password_salt/salt — sob support.
+    var _hash = admin.password_hash || admin.hash || admin.pass || admin.pass_hash || admin.passwordHash || '';
+    var _salt = admin.password_salt || admin.salt || admin.passwordSalt || '';
+    if (_salt && _hash) {
+      ok = (await hashPassword(password, _salt)) === _hash;
+    } else if (_hash) {
+      ok = password === _hash; // purono plain password support
     }
     if (!ok) return json({ ok: false, error: 'Invalid username or password' }, 401);
 

@@ -16,12 +16,12 @@ export async function onRequestPost({ request, env }) {
     var row = await db.prepare('SELECT * FROM admins WHERE id = ?').bind(chk.admin.id).first();
     if (!row) return bad('Account not found');
     var ok = false;
-    if (row.password_salt) {
-      ok = (await hashPassword(oldPassword, row.password_salt)) === row.password_hash;
-    } else if (row.salt) {
-      ok = (await hashPassword(oldPassword, row.salt)) === row.password_hash;
-    } else {
-      ok = oldPassword === row.password_hash;
+    var _rh = row.password_hash || row.hash || row.pass || row.pass_hash || row.passwordHash || '';
+    var _rs = row.password_salt || row.salt || row.passwordSalt || '';
+    if (_rs && _rh) {
+      ok = (await hashPassword(oldPassword, _rs)) === _rh;
+    } else if (_rh) {
+      ok = oldPassword === _rh;
     }
     if (!ok) return bad('Old password vul', 401);
     var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
