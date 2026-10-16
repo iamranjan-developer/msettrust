@@ -4,14 +4,72 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gallery | Modern Skill Educational Trust</title>
-    <meta name="description" content="Gallery - MSET work photos and impact stories." />
+    <meta
+      name="description"
+      content="Gallery - MSET work photos and impact stories."
+    />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <div id="site-header"></div>
-    <section class="section"><div class="container"><span class="eyebrow">Our Work in Photos</span><h1>Gallery & Impact Stories</h1><div style="display:flex;gap:.6rem;margin:1rem 0;flex-wrap:wrap"><button class="btn btn-dark" data-filter="all">All</button><button class="btn btn-dark" data-filter="edu">Education</button><button class="btn btn-dark" data-filter="skill">Skill</button><button class="btn btn-dark" data-filter="event">Events</button></div><div class="gallery" id="gallery-grid" aria-live="polite"></div><div class="state" id="gallery-state">Loading photos…</div></div></section>
+    <section class="section">
+      <div class="container">
+        <span class="eyebrow">Our Work in Photos</span>
+        <h1>Gallery & Impact Stories</h1>
+
+        <!-- Updated Filter Buttons -->
+        <div
+          style="display: flex; gap: 0.6rem; margin: 1rem 0; flex-wrap: wrap"
+        >
+          <button class="btn btn-dark" data-filter="all">All</button>
+          <button class="btn btn-dark" data-filter="computer-it">
+            Computer & IT
+          </button>
+          <button class="btn btn-dark" data-filter="education">
+            Education
+          </button>
+          <button class="btn btn-dark" data-filter="skill">Skill</button>
+          <button class="btn btn-dark" data-filter="vocational-training">
+            Vocational Training
+          </button>
+          <button class="btn btn-dark" data-filter="health-camps">
+            Health Camps
+          </button>
+          <button class="btn btn-dark" data-filter="skill-programs">
+            Skill Programs
+          </button>
+          <button class="btn btn-dark" data-filter="franchise-centers">
+            Franchise Centers
+          </button>
+          <button class="btn btn-dark" data-filter="community-welfare">
+            Community Welfare
+          </button>
+          <button class="btn btn-dark" data-filter="women-empowerment">
+            Women Empowerment
+          </button>
+          <button class="btn btn-dark" data-filter="seminars-workshops">
+            Seminars & Workshops
+          </button>
+          <button class="btn btn-dark" data-filter="student-activities">
+            Student Activities
+          </button>
+          <button class="btn btn-dark" data-filter="rural-development">
+            Rural Development
+          </button>
+          <button class="btn btn-dark" data-filter="events-awareness">
+            Events & Awareness
+          </button>
+          <button class="btn btn-dark" data-filter="miscellaneous">
+            Miscellaneous
+          </button>
+        </div>
+
+        <div class="gallery" id="gallery-grid" aria-live="polite"></div>
+        <div class="state" id="gallery-state">Loading photos…</div>
+      </div>
+    </section>
     <div id="site-footer"></div>
-<a class="whatsapp" href="https://wa.me/919339266366" target="_blank">W</a>
+    <a class="whatsapp" href="https://wa.me/919339266366" target="_blank">W</a>
     <script src="js/layout.js" defer></script>
     <script src="js/api.js" defer></script>
     <script src="js/main.js" defer></script>
