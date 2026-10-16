@@ -72,9 +72,9 @@ export async function onRequestPut({ request, env }) {
   if (!db) return json({ ok: false, error: 'DB binding missing' }, 500);
   try {
     var body = await request.json().catch(function () { return {}; });
-    var id = parseInt(body.id, 10);
+    var id = body.id;
     var password = String(body.password || '');
-    if (!id || !password) return bad('Staff id and new password required');
+    if ((id === undefined || id === null || id === '') || !password) return bad('Staff id and new password required');
     if (password.length < 6) return bad('Password minimum 6 character');
     var target = null;
     try {
@@ -83,8 +83,10 @@ export async function onRequestPut({ request, env }) {
       target = await db.prepare('SELECT id FROM admins WHERE id = ?').bind(id).first();
     }
     if (!target) return bad('Staff not found');
-    if (target.role === 'main_admin') return bad('Main admin password ekhan theke bodlano jabe na', 403);
-    if (target.id === chk.admin.id) return bad('Nijer password Password tab theke bodlan', 403);
+    var _tr = String(target.role == null ? '' : target.role).toLowerCase().trim();
+    var _isMain = (_tr === '' || _tr === 'main_admin' || _tr === 'admin' || _tr === 'superadmin' || _tr === 'owner' || _tr === 'administrator');
+    if (_isMain) return bad('Main admin password ekhan theke bodlano jabe na', 403);
+    if (String(target.id) === String(chk.admin.id)) return bad('Nijer password Password tab theke bodlan', 403);
     var salt = makeSalt();
     var hash = await hashPassword(password, salt);
     await db.prepare('UPDATE admins SET password_hash = ?, password_salt = ? WHERE id = ?').bind(hash, salt, id).run();
@@ -102,9 +104,9 @@ export async function onRequestDelete({ request, env }) {
   if (!db) return json({ ok: false, error: 'DB binding missing' }, 500);
   try {
     var body = await request.json().catch(function () { return {}; });
-    var id = parseInt(body.id, 10);
-    if (!id) return bad('Staff id required');
-    if (id === chk.admin.id) return bad('Nije nije-ke delete kora jabe na', 403);
+    var id = body.id;
+    if (id === undefined || id === null || id === '') return bad('Staff id required');
+    if (String(id) === String(chk.admin.id)) return bad('Nije nije-ke delete kora jabe na', 403);
     var target = null;
     try {
       target = await db.prepare('SELECT id, role FROM admins WHERE id = ?').bind(id).first();
@@ -112,7 +114,8 @@ export async function onRequestDelete({ request, env }) {
       target = await db.prepare('SELECT id FROM admins WHERE id = ?').bind(id).first();
     }
     if (!target) return bad('Staff not found');
-    if (target.role === 'main_admin') return bad('Main admin-ke delete kora jabe na', 403);
+    var _dr = String(target.role == null ? '' : target.role).toLowerCase().trim();
+    if (_dr === '' || _dr === 'main_admin' || _dr === 'admin' || _dr === 'superadmin' || _dr === 'owner' || _dr === 'administrator') return bad('Main admin-ke delete kora jabe na', 403);
     await db.prepare('DELETE FROM sessions WHERE admin_id = ?').bind(id).run().catch(function () {});
     await db.prepare('DELETE FROM admins WHERE id = ?').bind(id).run();
     return json({ ok: true });

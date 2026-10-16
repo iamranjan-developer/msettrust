@@ -34,8 +34,8 @@ export async function onRequestPost({ request, env }) {
       await db.prepare("UPDATE admins SET last_login_at = datetime('now') WHERE id = ?").bind(admin.id).run().catch(() => {});
     } catch {}
 
-    var role = admin.role || 'main_admin';
-    if (role !== 'main_admin' && role !== 'staff') role = 'staff';
+    var _rv = String(admin.role == null ? '' : admin.role).toLowerCase().trim();
+    var role = (_rv === 'staff') ? 'staff' : 'main_admin';
 
     return new Response(JSON.stringify({ ok: true, username: admin.username, name: admin.name_en || admin.username, role: role }), {
       headers: { 'Content-Type': 'application/json; charset=utf-8', 'Set-Cookie': sessionCookie(sid) },

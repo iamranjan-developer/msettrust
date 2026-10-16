@@ -48,7 +48,15 @@ export function getSessionId(request) {
 }
 
 // Cookie -> sessions -> admins join. expires_at number (ms) ba ISO string dui-tai support.
-// role: main_admin / staff. Jodi role column na thake (migration 0002 age), fallback main_admin.
+// role normalize: D1-te jai thakuk (main_admin/admin/superadmin/owner) — main_admin hisebe dhorbo.
+// staff chara sob main_admin noy: sudhu staff thakle staff, baki main_admin.
+function normRole(r) {
+  var v = String(r == null ? '' : r).toLowerCase().trim();
+  if (v === 'staff') return 'staff';
+  if (v === 'main_admin' || v === 'admin' || v === 'superadmin' || v === 'owner' || v === 'administrator') return 'main_admin';
+  if (!v) return 'main_admin';
+  return 'staff';
+}
 export async function currentAdmin(request, env) {
   try {
     var db = getDB(env);
@@ -80,8 +88,7 @@ export async function currentAdmin(request, env) {
       await db.prepare('DELETE FROM sessions WHERE id = ?').bind(sid).run().catch(function () {});
       return null;
     }
-    var role = row.role || 'main_admin';
-    if (role !== 'main_admin' && role !== 'staff') role = 'staff';
+    var role = normRole(row.role);
     return { id: row.id, username: row.username, name_en: row.name_en, role: role };
   } catch (e) { return null; }
 }
