@@ -890,3 +890,26 @@ details summary {
     min-width: 0;
   }
 }
+
+/* --- gallery filter buttons (small pill, same color — category name unchanged) --- */
+.filter-bar {
+  display: flex;
+  gap: 0.45rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+.filter-bar .btn {
+  padding: 0.42rem 0.95rem;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  border-width: 1.5px;
+}
+@media (max-width: 600px) {
+  .filter-bar {
+    gap: 0.35rem;
+  }
+  .filter-bar .btn {
+    padding: 0.34rem 0.75rem;
+    font-size: 0.76rem;
+  }
+}
